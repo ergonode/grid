@@ -13,21 +13,26 @@ use Ergonode\Grid\FilterInterface;
 
 /**
  */
-class CheckColumn extends AbstractColumn
+class LabelColumn extends AbstractColumn
 {
-    public const TYPE = 'CHECK';
-    private const WIDTH = 40;
+    public const TYPE = 'LABEL';
+
+    /**
+     * @var string
+     */
+    private $colorField;
 
     /**
      * @param string               $field
-     * @param string|null          $label
+     * @param string               $colorField
+     * @param string               $label
      * @param FilterInterface|null $filter
      */
-    public function __construct(string $field, string $label = null, ?FilterInterface $filter = null)
+    public function __construct(string $field, string $colorField, string $label, ?FilterInterface $filter = null)
     {
         parent::__construct($field, $label, $filter);
 
-        $this->setWidth(self::WIDTH);
+        $this->colorField = $colorField;
     }
 
     /**
@@ -42,10 +47,10 @@ class CheckColumn extends AbstractColumn
      * @param string $id
      * @param array  $row
      *
-     * @return string|null
+     * @return array
      */
-    public function render(string $id, array $row): ?string
+    public function render(string $id, array $row): array
     {
-        return $row[$id];
+        return ['label' => $row[$id], 'color' => $row[$this->colorField]];
     }
 }
