@@ -9,27 +9,36 @@ declare(strict_types = 1);
 
 namespace Ergonode\Grid\Column;
 
+use Ergonode\Attribute\Domain\Entity\AttributeId;
+use Ergonode\Attribute\Domain\ValueObject\AttributeCode;
 use Ergonode\Grid\FilterInterface;
 
 /**
  */
-class DateColumn extends AbstractColumn
+class LabelColumn extends AbstractColumn
 {
-    public const TYPE = 'DATE';
-    private const WIDTH = 220;
+    public const TYPE = 'LABEL';
 
     /**
      * @param string               $field
      * @param string               $label
+     * @param array                $statuses
      * @param FilterInterface|null $filter
+     *
+     * @throws \Exception
      */
-    public function __construct(string $field, ?string $label = null, ?FilterInterface $filter = null)
+    public function __construct(string $field, string $label, array $statuses, FilterInterface $filter = null)
     {
         parent::__construct($field, $label, $filter);
 
-        $this->setWidth(self::WIDTH);
-    }
+        $colors = [];
+        foreach ($statuses as $code => $status) {
+            $colors[$code] = $status['color'];
+        }
 
+        $this->setExtension('attribute_id', AttributeId::fromKey(new AttributeCode($field))->getValue());
+        $this->setExtension('colors', $colors);
+    }
 
     /**
      * @return string
@@ -47,6 +56,6 @@ class DateColumn extends AbstractColumn
      */
     public function render(string $id, array $row): ?string
     {
-        return $row[$id];
+        return $row[$id] ?? null;
     }
 }

@@ -13,9 +13,9 @@ use Ergonode\Grid\FilterInterface;
 
 /**
  */
-class TextFilter implements FilterInterface
+class LabelFilter implements FilterInterface
 {
-    public const TYPE = 'TEXT';
+    public const TYPE = 'SELECT';
 
     /**
      * @var string
@@ -23,10 +23,17 @@ class TextFilter implements FilterInterface
     private $value;
 
     /**
+     * @var array;
+     */
+    private $options;
+
+    /**
+     * @param array       $options
      * @param string|null $value
      */
-    public function __construct(?string $value = null)
+    public function __construct(array $options, ?string $value = null)
     {
+        $this->options = $options;
         $this->value = $value;
     }
 
@@ -35,7 +42,7 @@ class TextFilter implements FilterInterface
      */
     public function render(): array
     {
-        return [];
+        return ['options' => $this->options];
     }
 
     /**
@@ -51,11 +58,11 @@ class TextFilter implements FilterInterface
      */
     public function isEqual(): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * @return array[]|string
+     * @return string|array[]
      */
     public function getValue()
     {
